@@ -1,0 +1,22 @@
+version: '2'
+services:
+    nanao-app:
+        image: nanao
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config
+            - SPRING_DATA_MONGODB_URI=mongodb://nanao-mongodb:27017
+            - SPRING_DATA_MONGODB_DATABASE=nanao
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        ports:
+            - 8080:8080
+    nanao-mongodb:
+        extends:
+            file: mongodb.yml
+            service: nanao-mongodb
+    jhipster-registry:
+        extends:
+            file: jhipster-registry.yml
+            service: jhipster-registry
+        environment:
+            - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:./central-config/docker-config/
